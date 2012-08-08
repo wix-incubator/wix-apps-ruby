@@ -1,0 +1,3 @@
+APPLICATION_ID = '12a873f7-97e8-a662-79b4-52d18a1b8922'
+SECRET_KEY = 'd245bbf8-57eb-49d6-aeff-beff6d82cd39'
+
