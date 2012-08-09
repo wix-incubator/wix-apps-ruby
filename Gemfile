@@ -1,10 +1,7 @@
 source 'https://rubygems.org'
 
 gemspec
-
-group :test do
-  gem 'rake'
-end
+gemspec :development_group => :gem_dev
 
 group :development do
   gem 'ruby-debug', :platforms => :mri_18
