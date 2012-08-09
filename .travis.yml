@@ -14,6 +14,3 @@ bundler_args: --without development
 notifications:
   email:
     - gregory@wix.com
-jdk:
-  - openjdk7
-  - oraclejdk7
