@@ -10,7 +10,7 @@ rvm:
   - jruby-head
   - 1.8.7
   - ree
-bundler_args: --without development test
+bundler_args: --without development
 notifications:
   email:
     - gregory@wix.com
