@@ -5,6 +5,7 @@ require 'openssl'
 module Wix
   module Apps
     class SignedInstanceParseError < Exception;end
+    class SignedInstanceNoSecretKey < Exception;end
     # This class deal with Wix Signed Instance
     # (http://dev.wix.com/display/wixdevelopersapi/The+Signed+Instance)
     #
@@ -23,6 +24,7 @@ module Wix
 
       # validates signature
       def valid?
+        raise SignedInstanceNoSecretKey.new('Please provide secret key') if @secret.nil?
         digest  = OpenSSL::Digest::Digest.new('sha256')
         hmac_digest = OpenSSL::HMAC.digest(digest, @secret, @encoded_json)
         my_signature = Base64.urlsafe_encode64(hmac_digest).gsub('=','')

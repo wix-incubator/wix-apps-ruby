@@ -56,6 +56,15 @@ describe Wix::Apps::SignedInstance do
   end
 
   describe "signature validation" do
+
+    describe "secret is nil" do
+      subject { Wix::Apps::SignedInstance.new(raw_signed_instance) }
+
+      it "raise SignedInstanceNoSecretKey" do
+        expect { subject.valid? }.to raise_error Wix::Apps::SignedInstanceNoSecretKey
+      end
+    end
+
     describe "incorect signature" do
       subject { Wix::Apps::SignedInstance.new(raw_signed_instance, :secret => 'another-secret') }
 
