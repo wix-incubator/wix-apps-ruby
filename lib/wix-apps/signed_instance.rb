@@ -49,7 +49,7 @@ module Wix
         begin
           @json = Base64.urlsafe_decode64(padded_json)
           signed_instance = MultiJson.load(@json)
-        rescue ArgumentError => e
+        rescue ArgumentError, MultiJson::DecodeError => e
           raise SignedInstanceParseError.new(e.message)
         end
 
