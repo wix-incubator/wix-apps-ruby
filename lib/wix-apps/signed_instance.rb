@@ -54,7 +54,7 @@ module Wix
         end
 
         @instance_id = signed_instance['instanceId']
-        @sign_date = Time.parse(signed_instance['signDate'])
+        @sign_date = DateTime.parse(signed_instance['signDate'])
         raise SignedInstanceParseError if @instance_id.nil? || @sign_date.nil?
 
         @uid = signed_instance['uid']
