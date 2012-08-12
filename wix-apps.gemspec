@@ -4,9 +4,9 @@ require File.expand_path('../lib/wix-apps/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Gregory Man"]
   gem.email         = ["man.gregory@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{ Rack middleware for WixApps }
+  gem.summary       = %q{ Rack middleware for WixApps parameters parsing and validation }
+  gem.homepage      = "https://github.com/wix/wix-apps-ruby"
 
   gem.add_dependency 'multi_json'
   gem.add_dependency 'rack'
