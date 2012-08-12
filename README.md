@@ -1,7 +1,8 @@
 # Wix::Apps
 [![Build Status](https://secure.travis-ci.org/wix/wix-apps-ruby.png?branch=master)](http://travis-ci.org/wix/wix-apps-ruby)
 
-TODO: Write a gem description
+Rack middleware use with "Third Party Applications".
+It checks signature and passes the instance param to you application
 
 ## Installation
 
@@ -19,7 +20,18 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Any Rack Application
+Add Wix::Apps::SignedInstanceMiddleware as any other middleware.
+```ruby
+use Wix::Apps::SignedInstanceMiddleware, secured_paths: ['/yours', '/paths'], secret_key: 'secret_key'
+```
+### Rails
+In application.rb, add:
+```ruby
+config.middleware.use Wix::Apps::SignedInstanceMiddleware,
+  secured_paths: ['/yours', '/paths'], secret_key: 'your-secret-key'
+```
+
 
 ## Contributing
 
