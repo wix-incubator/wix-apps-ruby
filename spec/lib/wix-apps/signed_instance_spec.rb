@@ -23,11 +23,11 @@ describe Wix::Apps::SignedInstance do
     end
 
     it "parse sign_date as Date" do
-      subject.sign_date.should be_kind_of(Date)
+      subject.sign_date.should be_kind_of(Time)
     end
 
     it "parse sign_date" do
-      subject.sign_date.should == Date.rfc3339('2012-08-08T19:47:31.624Z')
+      subject.sign_date.should == Time.parse('2012-08-08T19:47:31.624Z')
     end
 
     it "return nil as user id" do
