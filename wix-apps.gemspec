@@ -12,6 +12,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rack'
   gem.add_dependency 'jruby-openssl' if RUBY_PLATFORM == 'java'
 
+  gem.add_development_dependency 'rake'
   gem.add_development_dependency "rspec"
   gem.add_development_dependency 'rack-test'
 
