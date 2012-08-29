@@ -44,7 +44,8 @@ module Wix
 
         # Need to add Base64 padding.
         # (http://stackoverflow.com/questions/4987772/decoding-facebooks-signed-request-in-ruby-sinatra)
-        padded_json = @encoded_json + ('=' * (4 - @encoded_json.length % 4))
+        padded_json = @encoded_json
+        padded_json += ('=' * (4 - @encoded_json.length % 4)) if padded_json.length % 4 != 0
 
         begin
           @json = Base64.urlsafe_decode64(padded_json)
