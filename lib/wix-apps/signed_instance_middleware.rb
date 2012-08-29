@@ -57,7 +57,7 @@ module Wix
           'user_id' => @instance.uid,
           'permissions' => @instance.permissions
         }
-        @request.GET['instance'] = parsed_instance
+        @request.GET['parsed_instance'] = parsed_instance
 
       end
     end

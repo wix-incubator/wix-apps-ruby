@@ -35,7 +35,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
       describe "instance parsing" do
         it "have instance_id" do
           app.should_receive(:call) do |arg|
-            arg['rack.request.query_hash']['instance']['instance_id']
+            arg['rack.request.query_hash']['parsed_instance']['instance_id']
               .should eq('b8140e4d-475d-48ed-819f-bad0de447069')
 
             [200, {}, []]
@@ -46,7 +46,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
 
         it "have sign_date" do
           app.should_receive(:call) do |arg|
-            arg['rack.request.query_hash']['instance']['sign_date']
+            arg['rack.request.query_hash']['parsed_instance']['sign_date']
               .should eq(DateTime.parse("2012-08-11T13:56:44.635Z"))
             [200, {}, []]
           end
@@ -60,7 +60,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
 
         it "have user_id" do
           app.should_receive(:call) do |arg|
-            arg['rack.request.query_hash']['instance']['user_id']
+            arg['rack.request.query_hash']['parsed_instance']['user_id']
               .should eq('29d8204a-3b82-4a98-8d86-2464a6b836da')
             [200, {}, []]
           end
@@ -70,7 +70,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
 
         it "don't have permissions" do
           app.should_receive(:call) do |arg|
-            arg['rack.request.query_hash']['instance']['permissions']
+            arg['rack.request.query_hash']['parsed_instance']['permissions']
               .should be_nil
             [200, {}, []]
           end
@@ -85,7 +85,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
 
         it "it have user_id" do
           app.should_receive(:call) do |arg|
-            arg['rack.request.query_hash']['instance']['user_id']
+            arg['rack.request.query_hash']['parsed_instance']['user_id']
               .should eq('29d8204a-3b82-4a98-8d86-2464a6b836da')
             [200, {}, []]
           end
@@ -95,7 +95,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
 
         it "have permissions" do
           app.should_receive(:call) do |arg|
-            arg['rack.request.query_hash']['instance']['permissions']
+            arg['rack.request.query_hash']['parsed_instance']['permissions']
               .should eq('OWNER')
             [200, {}, []]
           end

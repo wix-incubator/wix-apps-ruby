@@ -2,7 +2,7 @@
 [![Build Status](https://secure.travis-ci.org/wix/wix-apps-ruby.png?branch=master)](http://travis-ci.org/wix/wix-apps-ruby)
 
 Rack middleware use with "Third Party Applications".
-It checks signature and passes the instance param to you application
+It checks signature and passes the parsed_instance param to you application
 
 ## Installation
 
