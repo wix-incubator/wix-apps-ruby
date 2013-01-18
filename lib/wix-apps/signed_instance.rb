@@ -6,8 +6,8 @@ module Wix
   module Apps
     class SignedInstanceParseError < Exception;end
     class SignedInstanceNoSecretKey < Exception;end
-    # This class deal with Wix Signed Instance
-    # (http://dev.wix.com/display/wixdevelopersapi/The+Signed+Instance)
+    # This class deals with Wix Signed Instance
+    # (http://dev.wix.com/docs/display/DRAF/Using+the+Signed+App+Instance)
     #
     # Example:
     # si = SignedInstance.new('vrinSv2HB9tqbnJ....')
