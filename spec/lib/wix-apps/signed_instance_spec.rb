@@ -69,13 +69,13 @@ describe Wix::Apps::SignedInstance do
       subject { Wix::Apps::SignedInstance.new(raw_signed_instance, :secret => 'another-secret') }
 
       it "return false on valid?" do
-        subject.valid?.should be_false
+        expect(subject.valid?).to eq(false)
       end
     end
 
     describe "valid signature" do
       it "return true on valid?" do
-        subject.valid?.should be_true
+        expect(subject.valid?).to eq(true)
       end
     end
   end
@@ -83,21 +83,21 @@ describe Wix::Apps::SignedInstance do
   describe "owner?" do
     describe "without user id" do
       it "return false" do
-        subject.owner?.should be_false
+        expect(subject.owner?).to eq(false)
       end
     end
 
     describe "with user id" do
       subject { Wix::Apps::SignedInstance.new(raw_signed_instance_with_user_id, :secret => SECRET_KEY) }
       it "return false" do
-        subject.owner?.should be_false
+        expect(subject.owner?).to eq(false)
       end
     end
 
     describe "in owner mode" do
       subject { Wix::Apps::SignedInstance.new(raw_signed_in_owner_mode, :secret => SECRET_KEY) }
       it "return true" do
-        subject.owner?.should be_true
+        expect(subject.owner?).to eq(true)
       end
     end
   end
