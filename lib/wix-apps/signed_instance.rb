@@ -13,7 +13,7 @@ module Wix
     # si = SignedInstance.new('vrinSv2HB9tqbnJ....')
     class SignedInstance
       attr_reader :raw_signed_instance, :instance_id, :sign_date, :uid,
-                  :permissions
+                  :permissions, :vendor_product_id
 
       def initialize(raw_signed_instance, options = {})
         @raw_signed_instance = raw_signed_instance
@@ -60,6 +60,7 @@ module Wix
 
         @uid = signed_instance['uid']
         @permissions = signed_instance['permissions']
+        @vendor_product_id = signed_instance['vendorProductId']
       end
     end
   end

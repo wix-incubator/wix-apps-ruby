@@ -11,6 +11,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
   let(:mock_request) { Rack::MockRequest.new(middleware) }
 
   let(:instance) { 'HottEZ2jPjqsqS8sFWwngJDZAc5L6BBv5j5N9WAN0Go.eyJpbnN0YW5jZUlkIjoiYjgxNDBlNGQtNDc1ZC00OGVkLTgxOWYtYmFkMGRlNDQ3MDY5Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTExVDEzOjU2OjQ0LjYzNVoiLCJ1aWQiOm51bGwsInBlcm1pc3Npb25zIjpudWxsfQ' }
+  let(:instance_with_vendor_product_id) { 'uMpuj5mv8WGtLlL4jFV4IKM6HgNuY5UkcZ8N7veqowY.ewogICJpbnN0YW5jZUlkIjogIjEzYmI3NTU4LWE4MjUtZmQ4Zi0xMzUxLTJkYzk1MGNhNmU5NCIsCiAgInNpZ25EYXRlIjogIjIwMTItMDgtMDhUMTk6NDc6MzEuNjI0WiIsCiAgInVpZCI6IG51bGwsCiAgInBlcm1pc3Npb25zIjogbnVsbCwKICAidmVuZG9yUHJvZHVjdElkIjogIlNLVS05NDY1Igp9' }
   let(:response) { mock_request.get('/wix', params: { 'instance' => instance }) }
 
   describe "Unsecured paths" do
@@ -52,6 +53,18 @@ describe Wix::Apps::SignedInstanceMiddleware do
           end
 
           response
+        end
+        describe "when instance has a vendor product id" do
+          let(:response) { mock_request.get('/wix', params: { 'instance' => instance_with_vendor_product_id }) }
+          it "have vendor_product_id" do
+            app.should_receive(:call) do |arg|
+              arg['rack.request.query_hash']['parsed_instance']['vendor_product_id']
+                .should eq('SKU-9465')
+              [200, {}, []]
+            end
+
+            response
+          end
         end
       end
 

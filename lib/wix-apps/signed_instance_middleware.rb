@@ -55,7 +55,8 @@ module Wix
           'instance_id' => @instance.instance_id,
           'sign_date' => @instance.sign_date,
           'user_id' => @instance.uid,
-          'permissions' => @instance.permissions
+          'permissions' => @instance.permissions,
+          'vendor_product_id' => @instance.vendor_product_id
         }
         @request.GET['parsed_instance'] = parsed_instance
 
