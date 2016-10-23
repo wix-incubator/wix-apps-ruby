@@ -19,17 +19,17 @@ describe Wix::Apps::SignedInstanceMiddleware do
   end
 
   describe "Secured Paths" do
-    describe "without instanse" do
+    describe "without instance" do
       let(:response) { mock_request.get('/wix') }
       it("returns a 401") { response.status.should == 401 }
     end
 
-    describe "with invalid instanse" do
+    describe "with invalid instance" do
       let(:instance) { 'invalid.instance' }
       it("returns a 403") { response.status.should == 403 }
     end
 
-    describe "with valid instalnse" do
+    describe "with valid instance" do
       it("returns a 200") { response.status.should == 200 }
 
       describe "instance parsing" do
@@ -55,7 +55,7 @@ describe Wix::Apps::SignedInstanceMiddleware do
         end
       end
 
-      describe "logined user" do
+      describe "logged in user" do
         let(:instance) { '0jepzq2Gi8zFxLdS_LhTuXIkmFR41H1QOstEtn1v4w0.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTEyVDEwOjA0OjE3Ljg1MloiLCJ1aWQiOiIyOWQ4MjA0YS0zYjgyLTRhOTgtOGQ4Ni0yNDY0YTZiODM2ZGEiLCJwZXJtaXNzaW9ucyI6bnVsbH0' }
 
         it "have user_id" do
