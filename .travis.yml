@@ -2,13 +2,14 @@ before_script:
   - uname -a
 language: ruby
 rvm:
-  - 1.9.3
-  - 1.9.2
-  - jruby-19mode
-  - rbx-19mode
+  - 2.0
+  - 2.1
+  - 2.2
+  - rbx-head
   - ruby-head
   - jruby-head
 bundler_args: --without development
 notifications:
   email:
     - gregory@wix.com
+    - niklas@bichinger.de
