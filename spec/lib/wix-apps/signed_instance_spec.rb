@@ -1,5 +1,16 @@
 require 'spec_helper'
 
+describe 'signing method' do
+
+  let(:signed_instance) { 'naQKltLRVJwLVN90qQYpmmyzkVqFIH0hpvETYuivA1U.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTA4VDE5OjQ3OjMxLjYyNFoiLCJ1aWQiOm51bGwsInBlcm1pc3Npb25zIjpudWxsfQ' }
+
+  it 'encodes correctly' do
+    decoded_json = decode(signed_instance)
+    expect(sign_string(decoded_json)).to eq signed_instance
+  end
+
+end
+
 describe Wix::Apps::SignedInstance do
 
   let(:params_with_user) {
