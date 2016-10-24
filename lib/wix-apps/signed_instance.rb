@@ -35,6 +35,8 @@ module Wix
           'originInstanceId' => :origin_instance_id,
       }
 
+      PERMISSIONS_OWNER = 'OWNER'
+
       attr_reader :raw_signed_instance, :strict_properties
       attr_reader *(REQUIRED_PROPERTIES.values + OPTIONAL_PROPERTIES.values)
 
@@ -52,11 +54,11 @@ module Wix
 
       # owner or site collaborator visiting?
       def owner_permissions?
-        permissions == 'OWNER'
+        permissions == PERMISSIONS_OWNER
       end
 
       # did the one single site owner log in?
-      def owner_login?
+      def owner_logged_in?
         # note: site owner id is required so we wouldn't have to check for nil,
         # but this method's output can be very important and I'm paranoid. ;)
         !site_owner_id.nil? && site_owner_id == uid
