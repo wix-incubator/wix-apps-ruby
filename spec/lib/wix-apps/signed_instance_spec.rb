@@ -98,7 +98,7 @@ describe Wix::Apps::SignedInstance do
     end
   end
 
-  describe 'initialization without `params_required`' do
+  describe 'initialization without `strict_properties`' do
     let(:params) { {instanceId: '123456789'} }
     subject { Wix::Apps::SignedInstance.new(sign(params), secret_key: SECRET_KEY, strict_properties: false) }
 
