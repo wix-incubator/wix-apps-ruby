@@ -58,6 +58,8 @@ module Wix
         path_match? paths, path
       end
 
+      # @param [Array<String,Regexp>] match_paths List of Strings (match exact path) amd Regexps (match whatever the regexp says)
+      # @param [String] path The path to match against
       def path_match?(match_paths, path)
         match_paths.any? { |match_path|
           case match_path.class.to_s
