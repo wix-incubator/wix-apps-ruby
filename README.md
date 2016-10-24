@@ -46,6 +46,23 @@ class WixController < ApplicationController
         ...
 ```
 
+### env['wix.instance']
+This WixApps middleware passes on a Wix::Apps::SignedInstance object through env['wix.instance']. The object has the following methods:
+
+Object method | Type | Description
+------------- | ---- | -----------
+instance_id | String | Required Wix instance property `instanceId`
+sign_date | DateTime | Required Wix instance property `signDate`
+uid | String | Optional Wix instance property `uid`
+permissions | String | Required Wix instance property `permissions`
+ip_and_port | String | Required Wix instance property `ipAndPort`
+vendor_product_id | String | Required Wix instance property `vendorProductId`
+aid | String | Required Wix instance property `aid`
+origin_instance_id | String | Optional Wix instance property `originInstanceId`
+site_owner_id | String | Required Wix instance property `siteOwnerId`
+owner_permissions? | Boolean | Indicates if instance user has owner (includes site administrators) permissions
+owner_logged_in? | Boolean | Indicates if instance user is the single owner of the site
+
 ### Options
 
 #### secured_paths
