@@ -1,14 +1,16 @@
 before_script:
   - uname -a
+before_install:
+  - gem install bundler
 language: ruby
 rvm:
   - 2.0
   - 2.1
   - 2.2
+  - 2.3
   - rbx-head
   - ruby-head
   - jruby-head
-bundler_args: --without development
 notifications:
   email:
     - gregory@wix.com
