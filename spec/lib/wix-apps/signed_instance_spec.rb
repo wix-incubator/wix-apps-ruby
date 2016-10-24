@@ -1,12 +1,24 @@
 require 'spec_helper'
 
-describe 'signing method' do
+describe 'signing test method' do
 
-  let(:signed_instance) { 'naQKltLRVJwLVN90qQYpmmyzkVqFIH0hpvETYuivA1U.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTA4VDE5OjQ3OjMxLjYyNFoiLCJ1aWQiOm51bGwsInBlcm1pc3Npb25zIjpudWxsfQ' }
+  let(:raw_signed_instance) { 'naQKltLRVJwLVN90qQYpmmyzkVqFIH0hpvETYuivA1U.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTA4VDE5OjQ3OjMxLjYyNFoiLCJ1aWQiOm51bGwsInBlcm1pc3Npb25zIjpudWxsfQ' }
+  let(:raw_signed_instance_with_user_id) { 'K78r2uwAQbvA68u-bXxn2cdIUFMZIp8v9XfA_hd-iyo.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTA4VDIyOjEwOjU2Ljg3NVoiLCJ1aWQiOiIyOWQ4MjA0YS0zYjgyLTRhOTgtOGQ4Ni0yNDY0YTZiODM2ZGEiLCJwZXJtaXNzaW9ucyI6bnVsbH0' }
+  let(:raw_signed_in_owner_mode) { 'AjQ3BniGXfSOjKw4ej_V0kh4-WF5eB2IRnbvsak9kwc.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTA4VDIyOjEyOjE2LjU4OVoiLCJ1aWQiOiIyOWQ4MjA0YS0zYjgyLTRhOTgtOGQ4Ni0yNDY0YTZiODM2ZGEiLCJwZXJtaXNzaW9ucyI6Ik9XTkVSIn0' }
 
-  it 'encodes correctly' do
-    decoded_json = decode(signed_instance)
-    expect(sign_string(decoded_json)).to eq signed_instance
+  it 'encodes correctly 1/3' do
+    decoded_json = decode(raw_signed_instance)
+    expect(sign_string(decoded_json)).to eq raw_signed_instance
+  end
+
+  it 'encodes correctly 2/3' do
+    decoded_json = decode(raw_signed_instance_with_user_id)
+    expect(sign_string(decoded_json)).to eq raw_signed_instance_with_user_id
+  end
+
+  it 'encodes correctly 3/3' do
+    decoded_json = decode(raw_signed_in_owner_mode)
+    expect(sign_string(decoded_json)).to eq raw_signed_in_owner_mode
   end
 
 end
