@@ -25,12 +25,14 @@ Or install it yourself as:
 ### Any Rack Application
 Add Wix::Apps::SignedInstanceMiddleware as any other middleware.
 ```ruby
-use Wix::Apps::SignedInstanceMiddleware, secured_paths: ['/your', '/paths', %r{\A/wix/(auth|update)\z}], secret_key: 'secret_key'
+use Wix::Apps::SignedInstanceMiddleware, secret_key: 'secret_key',
+  secured_paths: ['/your', '/paths', %r{\A/wix/(auth|update)\z}]
 ```
 ### Rails
 In application.rb, add:
 ```ruby
-config.middleware.use Wix::Apps::SignedInstanceMiddleware, secured_paths: ['/wix'], secret_key: 'your-secret-key'
+config.middleware.use Wix::Apps::SignedInstanceMiddleware, secret_key: 'your-secret-key',
+  secured_paths: ['/wix']
 ```
 
 In your controller handling a configured secured path, access the signed instance:
@@ -54,10 +56,10 @@ Example (secures '/auth_path', every path containing the string 'wix' and every 
     secured_paths: ['/auth_path', /wix/, %r{\A/wox/}]
  
 #### paths
-Just like secured_paths, except these paths may or may not receive a Wix signed instance. Calling `request.env('wix.instance')` in the controller may return nil.
+Just like secured_paths, except these paths may or may not receive a Wix signed instance. If it does, the instance has to be valid. Calling `request.env('wix.instance')` in the controller may return nil (although the env key `'wix.instance'` exists) if there was no instance passed.
  
 #### secret_key
-A String containing your Wix app's secret key
+A String containing your Wix app's secret key.
 
 Example:
 
