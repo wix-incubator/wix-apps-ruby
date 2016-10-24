@@ -1,33 +1,8 @@
 require 'spec_helper'
-require 'json'
-
-def encode_base64(payload)
-  Base64.urlsafe_encode64(payload).gsub('=', '')
-end
-
-def sign(payload)
-  encoded_payload = encode_base64(JSON.dump(payload))
-  digest = OpenSSL::Digest.new('sha256')
-  hmac_digest = OpenSSL::HMAC.digest(digest, SECRET_KEY, encoded_payload)
-  my_signature = Base64.urlsafe_encode64(hmac_digest).gsub('=', '')
-  "#{my_signature}.#{encoded_payload}"
-end
-
-def params_required
-  {
-    instanceId: '9f9c5c16-59c8-4708-8c25-855505daa954',
-    signDate: DateTime.now.rfc3339,
-    permissions: '',
-    ipAndPort: '123.123.123.123:1234',
-    vendorProductId: '',
-    aid: '12645948-59c8-4708-8c25-855505dac8ca',
-    siteOwnerId: '92771668-366f-4ec6-be21-b32c78e7b734'
-  }
-end
 
 describe Wix::Apps::SignedInstance do
 
-  let(:params_with_user_id) {
+  let(:params_with_user) {
     params_required.merge(uid: 'c713982b-9161-49bc-9ff5-67502e4b705b')
   }
 
@@ -82,10 +57,10 @@ describe Wix::Apps::SignedInstance do
     end
 
     describe 'With a user id' do
-      subject { Wix::Apps::SignedInstance.new(sign(params_with_user_id), secret_key: SECRET_KEY) }
+      subject { Wix::Apps::SignedInstance.new(sign(params_with_user), secret_key: SECRET_KEY) }
 
       it 'parses user id' do
-        expect(subject.uid).to eq params_with_user_id[:uid]
+        expect(subject.uid).to eq params_with_user[:uid]
       end
 
       it 'has owner not logged in' do

@@ -7,3 +7,7 @@ task :default => :spec
 
 desc 'Run specs'
 RSpec::Core::RakeTask.new
+
+task :console do
+  exec 'irb -r wix-apps.rb -I ./lib'
+end

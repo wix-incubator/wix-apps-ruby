@@ -1,101 +1,174 @@
 require 'spec_helper'
 
+def in_middleware
+  expect(app).to receive(:call) do |env|
+    yield(env)
+    [200, {}, []]
+  end
+
+  response
+end
+
 describe Wix::Apps::SignedInstanceMiddleware do
   include Rack::Test::Methods
 
   let(:app) { lambda { |env| [200, {}, []] } }
   let(:secret) { 'd245bbf8-57eb-49d6-aeff-beff6d82cd39' }
-
-  let(:middleware) { Wix::Apps::SignedInstanceMiddleware.new(app, secured_paths: ['/wix'],
-                                                             secret_key: secret) }
+  let(:middleware) { Wix::Apps::SignedInstanceMiddleware.new(
+    app,
+    secured_paths: ['/wix', %r{\A/secured_paths_\d+\z}],
+    paths: ['/wix_path', %r{\A/paths_\d+\z}],
+    secret_key: secret)
+  }
   let(:mock_request) { Rack::MockRequest.new(middleware) }
+  let(:instance) { sign(params_required) }
 
-  let(:instance) { 'HottEZ2jPjqsqS8sFWwngJDZAc5L6BBv5j5N9WAN0Go.eyJpbnN0YW5jZUlkIjoiYjgxNDBlNGQtNDc1ZC00OGVkLTgxOWYtYmFkMGRlNDQ3MDY5Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTExVDEzOjU2OjQ0LjYzNVoiLCJ1aWQiOm51bGwsInBlcm1pc3Npb25zIjpudWxsfQ' }
-  let(:response) { mock_request.get('/wix', params: {'instance' => instance}) }
-
-  describe 'Unsecured paths' do
+  describe 'a request to an unsecured path' do
     let(:response) { mock_request.get('/') }
-    it('returns a 200') { expect(response.status).to eq 200 }
+    it('returns a 200') do
+      expect(response.status).to eq 200
+    end
   end
 
-  describe 'Secured Paths' do
-    describe 'without instance' do
-      let(:response) { mock_request.get('/wix') }
-      it('returns a 401') { expect(response.status).to eq 401 }
-    end
+  describe 'a request to' do
 
-    describe 'with invalid instance' do
-      let(:instance) { 'invalid.instance' }
-      it('returns a 403') { expect(response.status).to eq 403 }
-    end
+    shared_examples_for 'a request to a path' do
+      describe 'without an instance' do
+        let(:response) { mock_request.get(path) }
 
-    describe 'with valid instance' do
-      it('returns a 200') { expect(response.status).to eq 200 }
-
-      describe 'instance parsing' do
-        it 'have instance_id' do
-          expect(app).to receive(:call) do |arg|
-            expect(arg['wix.instance'].instance_id).to eq 'b8140e4d-475d-48ed-819f-bad0de447069'
-            [200, {}, []]
-          end
-
-          response
+        it('returns a 200') do
+          expect(response.status).to eq 200
         end
 
-        it 'have sign_date' do
-          expect(app).to receive(:call) do |arg|
-            expect(arg['wix.instance'].sign_date).to eq DateTime.parse('2012-08-11T13:56:44.635Z')
-            [200, {}, []]
-          end
+        it 'contains the instance key in the env' do
+          in_middleware { |env| expect(env.has_key?('wix.instance')).to eq true }
+        end
 
-          response
+        it 'contains a nil instance in env' do
+          in_middleware { |env| expect(env['wix.instance']).to be_nil }
+        end
+
+      end
+
+      let(:response) { mock_request.get('/wix_path', params: {'instance' => instance}) }
+
+      describe 'with an empty instance' do
+        let(:instance) { nil }
+
+        it('returns a 403') do
+          expect(response.status).to eq 403
+        end
+
+      end
+
+      describe 'with a valid anonymous instance' do
+
+        let(:instance) { sign(params_required) }
+
+        it('returns a 200') do
+          expect(response.status).to eq 200
+        end
+
+        it 'contains the instance key in the env' do
+          in_middleware { |env| expect(env.has_key?('wix.instance')).to eq true }
+        end
+
+        it 'has an instance_id' do
+          in_middleware { |env| expect(env['wix.instance'].instance_id).to eq params_required[:instanceId] }
+        end
+
+      end
+    end
+
+    describe 'a path matched statically' do
+      let(:path) { '/wix_path' }
+      it_behaves_like 'a request to a path'
+    end
+
+    describe 'a path matched by regex' do
+      let(:path) { '/paths_9' }
+      it_behaves_like 'a request to a path'
+    end
+
+    shared_examples_for 'a request to a secured path' do
+      describe 'without an instance' do
+        let(:response) { mock_request.get(path) }
+        it('returns a 401') do
+          expect(response.status).to eq 401
         end
       end
 
-      describe 'logged in user' do
-        let(:instance) { '0jepzq2Gi8zFxLdS_LhTuXIkmFR41H1QOstEtn1v4w0.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTEyVDEwOjA0OjE3Ljg1MloiLCJ1aWQiOiIyOWQ4MjA0YS0zYjgyLTRhOTgtOGQ4Ni0yNDY0YTZiODM2ZGEiLCJwZXJtaXNzaW9ucyI6bnVsbH0' }
-
-        it 'have user_id' do
-          expect(app).to receive(:call) do |arg|
-            expect(arg['wix.instance'].uid).to eq '29d8204a-3b82-4a98-8d86-2464a6b836da'
-            [200, {}, []]
-          end
-
-          response
-        end
-
-        it "don't have permissions" do
-          expect(app).to receive(:call) do |arg|
-            expect(arg['wix.instance'].permissions).to be_nil
-            [200, {}, []]
-          end
-
-          response
+      describe 'with an invalid instance' do
+        let(:instance) { 'invalid.instance' }
+        it('returns a 403') do
+          expect(response.status).to eq 403
         end
       end
 
+      describe 'with an empty instance' do
+        let(:instance) { nil }
+        it('returns a 403') do
+          expect(response.status).to eq 403
+        end
+      end
 
-      describe 'owner' do
-        let(:instance) { 'zPsXLAaMznRbzXUiBo51bNzjKhVRo-GU5U4wSqyxzIg.eyJpbnN0YW5jZUlkIjoiOWY5YzVjMTYtNTljOC00NzA4LThjMjUtODU1NTA1ZGFhOTU0Iiwic2lnbkRhdGUiOiIyMDEyLTA4LTEyVDEwOjExOjIyLjkzNFoiLCJ1aWQiOiIyOWQ4MjA0YS0zYjgyLTRhOTgtOGQ4Ni0yNDY0YTZiODM2ZGEiLCJwZXJtaXNzaW9ucyI6Ik9XTkVSIn0' }
+      let(:response) { mock_request.get(path, params: {'instance' => instance}) }
 
-        it 'it have user_id' do
-          expect(app).to receive(:call) do |arg|
-            expect(arg['wix.instance'].uid).to eq '29d8204a-3b82-4a98-8d86-2464a6b836da'
-            [200, {}, []]
-          end
+      describe 'with a valid anonymous instance' do
+        it('returns a 200') do
+          expect(response.status).to eq 200
+        end
 
-          response
+        it 'has an instance_id' do
+          in_middleware { |env| expect(env['wix.instance'].instance_id).to eq params_required[:instanceId] }
+        end
+
+      end
+
+      describe 'with a valid logged in instance' do
+        let(:params_with_user) {
+          params_required.merge(uid: 'c713982b-9161-49bc-9ff5-67502e4b705b')
+        }
+
+        let(:instance) { sign(params_with_user) }
+
+        it 'has a user_id' do
+          in_middleware { |env| expect(env['wix.instance'].uid).to eq params_with_user[:uid] }
+        end
+
+        it 'does not have permissions' do
+          in_middleware { |env| expect(env['wix.instance'].permissions).to eq '' }
+        end
+      end
+
+      describe 'with a valid owner instance' do
+
+        let(:params_with_owner) {
+          params_required.merge(uid: '92771668-366f-4ec6-be21-b32c78e7b734', permissions: 'OWNER')
+        }
+
+        let(:instance) { sign(params_with_owner) }
+
+        it 'have a user_id' do
+          in_middleware { |env| expect(env['wix.instance'].uid).to eq params_with_owner[:uid] }
         end
 
         it 'have permissions' do
-          expect(app).to receive(:call) do |arg|
-            expect(arg['wix.instance'].permissions).to eq 'OWNER'
-            [200, {}, []]
-          end
-
-          response
+          in_middleware { |env| expect(env['wix.instance'].permissions).to eq params_with_owner[:permissions] }
         end
       end
     end
+
+    describe 'a secured path matched staically' do
+      let(:path) { '/wix' }
+      it_behaves_like 'a request to a secured path'
+    end
+
+    describe 'a secured path matched by regex' do
+      let(:path) { '/secured_paths_10' }
+      it_behaves_like 'a request to a secured path'
+    end
+
   end
+
 end
