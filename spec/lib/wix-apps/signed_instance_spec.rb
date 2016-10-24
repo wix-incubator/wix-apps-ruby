@@ -98,6 +98,15 @@ describe Wix::Apps::SignedInstance do
     end
   end
 
+  describe 'initialization without `params_required`' do
+    let(:params) { {instanceId: '123456789'} }
+    subject { Wix::Apps::SignedInstance.new(sign(params), secret_key: SECRET_KEY, strict_properties: false) }
+
+    it 'has an instance_id' do
+      expect(subject.instance_id).to eq params[:instanceId]
+    end
+  end
+
   describe 'signature validation' do
 
     describe 'with an invalid format' do

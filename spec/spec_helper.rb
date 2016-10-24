@@ -29,4 +29,3 @@ def params_required
     siteOwnerId: '92771668-366f-4ec6-be21-b32c78e7b734'
   }
 end
-

@@ -105,7 +105,7 @@ module Wix
           send "#{attribute}=", instance_value
         }
         # overwrite sign date with real DateTime object
-        self.sign_date = DateTime.parse(sign_date)
+        self.sign_date = DateTime.parse(sign_date) if strict_properties || sign_date
 
         # set all optional instance properties (if set)
         OPTIONAL_PROPERTIES.each { |instance_key, attribute|
