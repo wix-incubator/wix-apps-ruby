@@ -23,13 +23,13 @@ Or install it yourself as:
 ## Usage
 
 ### Any Rack Application
-Add Wix::Apps::SignedInstanceMiddleware as any other middleware.
+Add `Wix::Apps::SignedInstanceMiddleware` like any other middleware.
 ```ruby
 use Wix::Apps::SignedInstanceMiddleware, secret_key: 'secret_key',
   secured_paths: ['/your', '/paths', %r{\A/wix/(auth|update)\z}]
 ```
 ### Rails
-In application.rb, add:
+In `application.rb`, add:
 ```ruby
 config.middleware.use Wix::Apps::SignedInstanceMiddleware, secret_key: 'your-secret-key',
   secured_paths: ['/wix']
@@ -47,7 +47,7 @@ class WixController < ApplicationController
 ```
 
 ### env['wix.instance']
-This WixApps middleware passes on a Wix::Apps::SignedInstance object through env['wix.instance']. The object has the following methods:
+This WixApps middleware passes on a `Wix::Apps::SignedInstance` object through env['wix.instance']. The object has the following methods:
 
 Object method | Type | Description
 ------------- | ---- | -----------
