@@ -62,14 +62,7 @@ module Wix
       # @param [String] path The path to match against
       def path_match?(match_paths, path)
         match_paths.any? { |match_path|
-          case match_path.class.to_s
-            when 'String'
-              match_path == path
-            when 'Regexp'
-              match_path.match path
-            else
-              false
-          end
+          match_path === path
         }
       end
 
